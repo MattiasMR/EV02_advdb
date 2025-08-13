@@ -1,0 +1,46 @@
+# =================================================================
+# Dependencias y Entornos Virtuales
+# Ignora estas carpetas en cualquier nivel del repositorio
+# =================================================================
+**/node_modules/
+**/.venv/
+**/venv/
+
+# =================================================================
+# Archivos de Sistema Operativo
+# Evita subir archivos basura de macOS, Windows y Linux
+# =================================================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# =================================================================
+# Archivos de Configuración de Editores de Código (IDE)
+# Mantén las configuraciones locales fuera del repositorio
+# =================================================================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# =================================================================
+# Archivos Sensibles y Secretos
+# ¡MUY IMPORTANTE para no exponer contraseñas o claves!
+# =================================================================
+.env
+.env.*
+*.env
+secrets.yaml
+*.pem
+*.key
+
+# =================================================================
+# Archivos Temporales y de Respaldo
+# Archivos generados por aplicaciones que no son necesarios
+# =================================================================
+*.log
+*.tmp
+*.bak
+*.swp

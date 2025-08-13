@@ -1,0 +1,20 @@
+{
+  "name": "athena",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "setup": "node setupAthena.js",
+    "test": "node testScript.js",
+    "serve": "node expressTest.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-athena": "^3.864.0",
+    "@aws-sdk/client-s3": "^3.864.0",
+    "express": "^5.1.0"
+  }
+}
