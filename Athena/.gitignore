@@ -1,0 +1,19 @@
+# Archivos de configuración local
+.env.json
+.env
+
+# Dependencias
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cache
+.npm
+.eslintcache
+
+# Archivos temporales
+.DS_Store
+Thumbs.db

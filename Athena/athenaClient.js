@@ -5,10 +5,31 @@ import {
   GetQueryExecutionCommand,
   GetQueryResultsCommand
 } from "@aws-sdk/client-athena";
+import { readFileSync, existsSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Función para cargar configuración
+function loadConfig() {
+  const configPath = join(__dirname, '.env.json');
+  if (existsSync(configPath)) {
+    try {
+      const config = JSON.parse(readFileSync(configPath, 'utf8'));
+      return config;
+    } catch (error) {
+      console.warn("Warning: No se pudo leer .env.json, usando valores por defecto");
+    }
+  }
+  return null;
+}
+
+const config = loadConfig();
 
 const REGION   = process.env.AWS_REGION      || "us-east-1";
 const DATABASE = process.env.ATHENA_DB       || "ev02";
-const OUTPUT   = process.env.ATHENA_OUTPUT   || "s3://ev02-mattiasmorales/results/";
+const OUTPUT   = process.env.ATHENA_OUTPUT   || config?.resultsLocation || "s3://ev02-mattiasmorales/results/";
 const WORKGROUP= process.env.ATHENA_WORKGROUP|| "primary";
 const CATALOG  = process.env.ATHENA_CATALOG  || "AwsDataCatalog";
 

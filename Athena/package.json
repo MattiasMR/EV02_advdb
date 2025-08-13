@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "setup": "node setupAthena.js",
-    "test": "node testScript.js",
-    "serve": "node expressTest.js"
+    "serve": "node express.js",
+    "start": "npm run serve"
   },
   "keywords": [],
   "author": "",
