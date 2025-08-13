@@ -25,17 +25,29 @@ function loadConfig() {
   return null;
 }
 
-const config = loadConfig();
+// Función para obtener configuración actual (recarga dinámicamente)
+function getCurrentConfig() {
+  return loadConfig();
+}
+
+const initialConfig = loadConfig();
 
 const REGION   = process.env.AWS_REGION      || "us-east-1";
 const DATABASE = process.env.ATHENA_DB       || "ev02";
-const OUTPUT   = process.env.ATHENA_OUTPUT   || config?.resultsLocation || "s3://ev02-mattiasmorales/results/";
+const OUTPUT   = process.env.ATHENA_OUTPUT   || initialConfig?.resultsLocation || "s3://ev02-mattiasmorales/results/";
 const WORKGROUP= process.env.ATHENA_WORKGROUP|| "primary";
 const CATALOG  = process.env.ATHENA_CATALOG  || "AwsDataCatalog";
 
 const athena = new AthenaClient({ region: REGION });
 
-export async function runAthenaQuery(query, { database = DATABASE } = {}) {
+export async function runAthenaQuery(query, { database = DATABASE, resultsLocation = null } = {}) {
+  // Si no se especifica resultsLocation, intentar usar la configuración actual
+  let outputLocation = resultsLocation;
+  if (!outputLocation) {
+    const currentConfig = getCurrentConfig();
+    outputLocation = currentConfig?.resultsLocation || OUTPUT;
+  }
+  
   const ctx = database
     ? { Catalog: CATALOG, Database: database }
     : { Catalog: CATALOG };
@@ -43,7 +55,7 @@ export async function runAthenaQuery(query, { database = DATABASE } = {}) {
   const params = {
     QueryString: query,
     QueryExecutionContext: ctx,
-    ResultConfiguration: { OutputLocation: OUTPUT },
+    ResultConfiguration: { OutputLocation: outputLocation },
     WorkGroup: WORKGROUP
   };
 

@@ -117,7 +117,10 @@ async function main() {
     const config = saveConfig(bucketName);
     
     // 5. Crear base de datos Athena
-    await runAthenaQuery(`CREATE DATABASE IF NOT EXISTS ev02;`, { database: undefined });
+    await runAthenaQuery(`CREATE DATABASE IF NOT EXISTS ev02;`, { 
+      database: undefined,
+      resultsLocation: config.resultsLocation 
+    });
     console.log("OK: Base de datos 'ev02' creada/verificada");
 
     // 6. Crear tabla Athena
@@ -137,7 +140,10 @@ CREATE EXTERNAL TABLE IF NOT EXISTS ev02.movies (
 STORED AS PARQUET
 LOCATION '${config.inputLocation}';
     `;
-    await runAthenaQuery(createTable, { database: "ev02" });
+    await runAthenaQuery(createTable, { 
+      database: "ev02",
+      resultsLocation: config.resultsLocation 
+    });
     console.log("OK: Tabla 'ev02.movies' creada/verificada");
 
     // 7. Verificar datos
@@ -147,7 +153,10 @@ LOCATION '${config.inputLocation}';
              min(release_date) AS fecha_minima,
              max(release_date) AS fecha_maxima
       FROM ev02.movies
-    `, { database: "ev02" });
+    `, { 
+      database: "ev02",
+      resultsLocation: config.resultsLocation 
+    });
     console.table(smoke.rows);
     
     console.log("\nSetup completado exitosamente!");
