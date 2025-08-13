@@ -2,7 +2,6 @@
 import sys, os, math, bisect
 from collections import defaultdict
 
-# Umbrales (puedes ajustarlos por -cmdenv) así al final de cuando se ejecuta la query
 """
 hadoop jar "$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar" \
   -input ./hadoop/input/movies_metadata_final.csv \

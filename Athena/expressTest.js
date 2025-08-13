@@ -1,4 +1,3 @@
-// expressTest.js
 import express from "express";
 import { runAthenaQuery } from "./athenaClient.js";
 import { QUERIES } from "./queries.js";

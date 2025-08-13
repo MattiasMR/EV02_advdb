@@ -15,7 +15,6 @@ const CATALOG  = process.env.ATHENA_CATALOG  || "AwsDataCatalog";
 const athena = new AthenaClient({ region: REGION });
 
 export async function runAthenaQuery(query, { database = DATABASE } = {}) {
-  // Si database es undefined/null, no lo incluimos en el contexto
   const ctx = database
     ? { Catalog: CATALOG, Database: database }
     : { Catalog: CATALOG };
@@ -30,7 +29,6 @@ export async function runAthenaQuery(query, { database = DATABASE } = {}) {
   const start = await athena.send(new StartQueryExecutionCommand(params));
   const qid = start.QueryExecutionId;
 
-  // poll estado
   for (;;) {
     await new Promise(r => setTimeout(r, 1000));
     const st = await athena.send(new GetQueryExecutionCommand({ QueryExecutionId: qid }));
@@ -42,7 +40,6 @@ export async function runAthenaQuery(query, { database = DATABASE } = {}) {
     }
   }
 
-  // pagina resultados
   let nextToken;
   const rows = [];
   let headers = [];

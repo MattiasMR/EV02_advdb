@@ -42,7 +42,7 @@ for line in sys.stdin:
     sum_wx[k]   += vc * va
     sum_wx2[k]  += vc * va * va
 
-# Emitir resultados (poblacional)
+# Emitir resultados 
 for k in sorted(n_titles.keys()):
     w  = sum_w[k]
     wx = sum_wx[k]

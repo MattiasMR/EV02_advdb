@@ -1,0 +1,127 @@
+hdfs dfs -rm -r ./hadoop/mc 2>/dev/null 
+hdfs dfs -rm -r ./hadoop/roi 2>/dev/null  
+hdfs dfs -rm -r ./hadoop/debut 2>/dev/null
+hdfs dfs -rm -r ./hadoop/hg 2>/dev/null  
+hdfs dfs -rm -r ./hadoop/stab 2>/dev/null
+
+# 1) MC 8.3s y 1.264s
+hadoop jar "$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar" \
+  -input ./hadoop/input/movies_metadata_final.csv \
+  -output ./hadoop/mc \
+  -mapper "python3 mapper.py" \
+  -reducer "python3 reducerMC.py"
+
+# 2) ROI (1 job, el reducer calcula deciles en memoria) 9.239s y 1.171s
+hadoop jar "$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar" \
+  -input ./hadoop/input/movies_metadata_final.csv \
+  -output ./hadoop/roi \
+  -mapper "python3 mapper.py" \
+  -reducer "python3 reducerROI.py"
+
+# 3) DEBUT 10.228s y 1.181s
+hadoop jar "$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar" \
+  -input ./hadoop/input/movies_metadata_final.csv \
+  -output ./hadoop/debut \
+  -mapper "python3 mapper.py" \
+  -reducer "python3 reducerDEBUT.py"
+
+# 4) Hidden Gems 9.319s y 1.338s
+hadoop jar "$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar" \
+  -input ./hadoop/input/movies_metadata_final.csv \
+  -output ./hadoop/hg \
+  -mapper "python3 mapper.py" \
+  -reducer "python3 reducerHG.py" \
+  -cmdenv MIN_VOTES=10
+
+# 5) Estabilidad 8.859s y 0.972s
+hadoop jar "$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar" \
+  -input ./hadoop/input/movies_metadata_final.csv \
+  -output ./hadoop/stab \
+  -mapper "python3 mapper.py" \
+  -reducer "python3 reducerSTAB.py"
+
+
+# Década - Etiqueta - % Suma de participaciones de las top 5 productoras - Etiqueta - Total
+# Década - Ranking - ID Productora - Nombre Productora - Revenue de la productora - % de participación 
+hdfs dfs -cat ./hadoop/mc/part-00000 | tr '\t' '|' | column -s '|' -t 
+
+
+# Década - Decil - Promedio ROI (revenue−budget)/budget - cantidad de películas
+hdfs dfs -cat ./hadoop/roi/part-00000  | tr '\t' '|' | column -s '|' -t
+
+
+# idProductora|nombreProductora|fechaEstreno|debutROI|debutPopularidad|noDebutPromedioROI|noDebutPromedioPopularidad|nPeliculasNoDebut|deltaROI|deltaPopularidad
+hdfs dfs -cat ./hadoop/debut/part-00000 | tr '\t' '|' | column -s '|' -t | head
+
+
+# Década - idPelicula - titulo - promedioVotos - popularidad - nVotos
+hdfs dfs -cat ./hadoop/hg/part-00000  | tr '\t' '|' | column -s '|' -t 
+
+
+# década - bucket de géneros - promedioVotos - std de promedio de votos - nPeliculas
+hdfs dfs -cat ./hadoop/stab/part-00000 | tr '\t' '|' | column -s '|' -t 
+
+
+
+hdfs dfs -rm -r $HADOOP_HOME/mc 2>/dev/null 
+hdfs dfs -rm -r $HADOOP_HOME/roi 2>/dev/null  
+hdfs dfs -rm -r $HADOOP_HOME/debut 2>/dev/null
+hdfs dfs -rm -r $HADOOP_HOME/hg 2>/dev/null  
+hdfs dfs -rm -r $HADOOP_HOME/stab 2>/dev/null
+
+# 1) MC 8.3s
+hadoop jar "$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar" \
+  -input $HADOOP_HOME/input/movies_metadata_final.csv \
+  -output $HADOOP_HOME/mc \
+  -mapper "python3 mapper.py" \
+  -reducer "python3 reducerMC.py"
+
+# 2) ROI 9.239s 
+hadoop jar "$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar" \
+  -input $HADOOP_HOME/input/movies_metadata_final.csv \
+  -output $HADOOP_HOME/roi \
+  -mapper "python3 mapper.py" \
+  -reducer "python3 reducerROI.py"
+
+# 3) DEBUT 10.228s
+hadoop jar "$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar" \
+  -input $HADOOP_HOME/input/movies_metadata_final.csv \
+  -output $HADOOP_HOME/debut \
+  -mapper "python3 mapper.py" \
+  -reducer "python3 reducerDEBUT.py"
+
+# 4) Joyitas escondidas 9.319s 
+hadoop jar "$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar" \
+  -input $HADOOP_HOME/input/movies_metadata_final.csv \
+  -output $HADOOP_HOME/hg \
+  -mapper "python3 mapper.py" \
+  -reducer "python3 reducerHG.py" \
+  -cmdenv MIN_VOTES=10
+
+# 5) Estabilidad 8.859s 
+hadoop jar "$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar" \
+  -input $HADOOP_HOME/input/movies_metadata_final.csv \
+  -output $HADOOP_HOME/stab \
+  -mapper "python3 mapper.py" \
+  -reducer "python3 reducerSTAB.py"
+
+
+# Década - Etiqueta - % Suma de participaciones de las top 5 productoras - Etiqueta - Total
+# Década - Ranking - ID Productora - Nombre Productora - Revenue de la productora - % de participación 
+hdfs dfs -cat $HADOOP_HOME/mc/part-00000 | tr '\t' '|' | column -s '|' -t 
+
+
+# Década - Decil - Promedio ROI (revenue−budget)/budget - cantidad de películas
+hdfs dfs -cat $HADOOP_HOME/roi/part-00000  | tr '\t' '|' | column -s '|' -t
+
+
+# idProductora|nombreProductora|fechaEstreno|debutROI|debutPopularidad|noDebutPromedioROI|noDebutPromedioPopularidad|nPeliculasNoDebut|deltaROI|deltaPopularidad
+hdfs dfs -cat $HADOOP_HOME/debut/part-00000 | tr '\t' '|' | column -s '|' -t | head
+
+
+# Década - idPelicula - titulo - promedioVotos - popularidad - nVotos
+hdfs dfs -cat $HADOOP_HOME/hg/part-00000  | tr '\t' '|' | column -s '|' -t 
+
+
+# década - bucket de géneros - promedioVotos - std de promedio de votos - nPeliculas
+hdfs dfs -cat $HADOOP_HOME/stab/part-00000 | tr '\t' '|' | column -s '|' -t 

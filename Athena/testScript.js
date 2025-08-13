@@ -1,9 +1,8 @@
-// testScript.js
 import { runAthenaQuery } from "./athenaClient.js";
 import { QUERIES } from "./queries.js";
 
 const qname = process.env.Q || process.argv[2] || "q1";
-const rawMin = process.env.MIN_VOTES ?? process.argv[3]; // opcional
+const rawMin = process.env.MIN_VOTES ?? process.argv[3]; 
 const minVotes = Number.isFinite(+rawMin) ? Math.max(0, Math.floor(+rawMin)) : undefined;
 
 (async () => {

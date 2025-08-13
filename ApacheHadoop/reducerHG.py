@@ -1,7 +1,6 @@
 import sys, os, math
 from collections import defaultdict
 
-# Umbrales (puedes ajustarlos por -cmdenv) así al final de cuando se ejecuta la query
 """
 hadoop jar "$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar" \
   -input ./hadoop/input/movies_metadata_final.csv \
@@ -61,9 +60,6 @@ for line in sys.stdin:
             pop[dec].append(x)
 
     elif tag == "MOV":
-        # Formatos soportados:
-        #   <id>|<title>|<va>|<pop>                (sin votos)  -> votes=0
-        #   <id>|<title>|<va>|<pop>|<vote_count>  (con votos)
         parts = val.split("|")
         if len(parts) < 4:
             continue

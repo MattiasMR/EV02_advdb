@@ -1,4 +1,3 @@
-// setupAthena.js
 import { runAthenaQuery } from "./athenaClient.js";
 
 async function main() {
@@ -24,7 +23,6 @@ LOCATION 's3://ev02-mattiasmorales/input/';
   await runAthenaQuery(createTable, { database: "ev02" });
   console.log("OK: CREATE TABLE ev02.movies");
 
-  // 3) Smoke test
   const smoke = await runAthenaQuery(`
     SELECT count(*) AS n,
            min(release_date) AS min_date,

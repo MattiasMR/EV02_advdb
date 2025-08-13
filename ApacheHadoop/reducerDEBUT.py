@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 import sys
 from collections import defaultdict
 from datetime import datetime
@@ -68,12 +67,11 @@ for (cid, cname), items in sorted(data.items(), key=lambda kv: (kv[0][0], kv[0][
     post_avg_pop = (sum(pop_vals)/len(pop_vals)) if pop_vals else 0.0
     n_post = len(rest)
 
-    # ΔROI y ΔPop (debut - promedio resto)
+    # deltaROI y deltaPop (debut - promedio resto)
     delta_roi = debut_roi - post_avg_roi
     delta_pop = (debut_pop - post_avg_pop) if (debut_pop is not None) else None
 
     # salida:
-    # <cid>|<cname> \t <debut_date>|<debut_roi>|<debut_pop>|<post_avg_roi>|<post_avg_pop>|<n_post>|<delta_roi>|<delta_pop>
     cname_safe = safe_name(cname)
     debut_roi_s = f"{debut_roi:.6f}"
     debut_pop_s = "" if debut_pop is None else f"{debut_pop:.6f}"

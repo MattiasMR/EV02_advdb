@@ -6,7 +6,6 @@
 // q5: Estabilidad de calificación según nº de géneros
 
 export const QUERIES = {
-  // q1: Concentración de mercado por década (Top-5 productoras por revenue)
   q1: `
   WITH e AS (
     SELECT
@@ -55,19 +54,16 @@ export const QUERIES = {
     UNION ALL
     SELECT * FROM pc_sq WHERE company IS NOT NULL AND company <> ''
   ),
-  -- Revenue prorrateado por compañía y década
   agg AS (
     SELECT decade, company, SUM(rev_share) AS revenue
     FROM pc
     GROUP BY 1,2
   ),
-  -- Total de la década (denominador único por película)
   tot AS (
     SELECT (y - (y % 10)) AS decade, SUM(rev) AS total_rev
     FROM e
     GROUP BY 1
   ),
-  -- Ranking Top-5 por década + % sobre total
   ranked AS (
     SELECT
       a.decade,
@@ -79,14 +75,12 @@ export const QUERIES = {
     FROM agg a
     JOIN tot t ON a.decade = t.decade
   ),
-  -- Suma de las 5 mejores para el top5_share de la década
   t5 AS (
     SELECT decade, SUM(revenue) AS top5_rev
     FROM ranked
     WHERE rn <= 5
     GROUP BY decade
   ),
-  -- Resultado final: 5 filas por década con top5_share incluido
   final AS (
     SELECT
       r.decade,
@@ -273,7 +267,6 @@ export const QUERIES = {
   ORDER BY decade, bud_decile;
   `,
 
-  // q3: “Efecto debut” de productoras (ROI y popularidad debut vs posteriores)
   q3: `
   WITH e AS (
     SELECT

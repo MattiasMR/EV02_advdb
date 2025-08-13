@@ -1,7 +1,4 @@
-// test.js
 import { runAthenaQuery } from "./athenaClient.js";
-import { QUERIES } from "./queries.js";
-
 
 (async () => {
   try {

@@ -32,7 +32,6 @@ for line in sys.stdin:
         continue
 
     if key.startswith("MC|"):
-        # MC|<decade>|<cid>|<cname> \t <revenue_prorrateado>
         parts = key.split("|", 4)
         if len(parts) < 4:
             continue
